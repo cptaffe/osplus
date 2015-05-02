@@ -10,21 +10,18 @@ namespace driver {
 
 class VGAWriter : public os::Writer {
 public:
+	VGAWriter();
 	static VGAWriter *Instance() { return &vga; }
 	virtual void WriteByte(u8 c);
 private:
 	static VGAWriter vga;
 
 	void Newline();
-	void Clear();
 
 	enum {
 		kWidth = 80,
 		kHeight = 25
 	};
-
-	// get around constructor issues
-	bool initialized = false;
 
 	u16 color = 7;
 	int i = 0, j = 0;

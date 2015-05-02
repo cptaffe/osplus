@@ -4,7 +4,8 @@
 
 os::driver::VGAWriter os::driver::VGAWriter::vga;
 
-void os::driver::VGAWriter::Clear() {
+os::driver::VGAWriter::VGAWriter() {
+	// clear screen.
 	for (size li = 0; li < (kHeight * kWidth); li++) {
 		buf[li] = (color << 8) | ' ';
 	}
@@ -19,10 +20,6 @@ void os::driver::VGAWriter::Newline() {
 }
 
 void os::driver::VGAWriter::WriteByte(u8 c) {
-	if (!initialized) {
-		Clear();
-		initialized = true;
-	}
 	switch (c) {
 	case '\n':
 		Newline();
