@@ -2,15 +2,15 @@
 #include "../standard.h"
 #include "vga.h"
 
-os::driver::VGA os::driver::VGA::vga;
+os::driver::VGAWriter os::driver::VGAWriter::vga;
 
-void os::driver::VGA::Clear() {
+void os::driver::VGAWriter::Clear() {
 	for (size li = 0; li < (kHeight * kWidth); li++) {
 		buf[li] = (color << 8) | ' ';
 	}
 }
 
-void os::driver::VGA::Newline() {
+void os::driver::VGAWriter::Newline() {
 	if (i != kHeight) {
 		i = (i + 1) % kHeight;
 	} else {
@@ -18,7 +18,7 @@ void os::driver::VGA::Newline() {
 	}
 }
 
-void os::driver::VGA::Put(char c) {
+void os::driver::VGAWriter::WriteByte(u8 c) {
 	if (!initialized) {
 		Clear();
 		initialized = true;

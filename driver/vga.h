@@ -3,20 +3,21 @@
 #define OS_DRIVER_VGA_H_
 
 #include "../types.h"
-#include "../terminal.h"
+#include "../writer.h"
 
 namespace os {
 namespace driver {
 
-class VGA : public os::Terminal {
+class VGAWriter : public os::Writer {
 public:
-	virtual void Put(char c);
-	static VGA *Instance() { return &vga; }
+	static VGAWriter *Instance() { return &vga; }
+	virtual void WriteByte(u8 c);
 private:
+	static VGAWriter vga;
+
 	void Newline();
 	void Clear();
 
-	static VGA vga;
 	enum {
 		kWidth = 80,
 		kHeight = 25

@@ -1,5 +1,6 @@
 
 #include "standard.h"
+#include "io.h"
 
 extern "C" void *memcpy(void *dest, const void *src, size n) {
 
@@ -20,16 +21,23 @@ extern "C" void *memcpy(void *dest, const void *src, size n) {
 	return dest;
 }
 
+void operator delete(void *ptr) {
+	// TODO: implement memory management.
+	os::IO::PutLine("call to delete.");
+}
+
+namespace __cxxabiv1 {
+
 extern "C" void __cxa_pure_virtual() {
 
 	// TODO: This function should ideally make a lot of noise and fail,
 	// this implementation does not.
+	os::IO::PutLine("call to pure virtual function!");
 }
 
 extern "C" void __cxa_atexit(void (*func) (void *), void * arg, void * dso_handle) {
 	// TODO: this function should be called on exit.
+	os::IO::PutLine("call to atexit.");
 }
 
-void operator delete(void *ptr) {
-	// TODO: implement memory management.
-}
+} // namespace __cxxabiv1

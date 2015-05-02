@@ -1,12 +1,13 @@
 
 #include "io.h"
 
-#include "terminal.h"
+#include "writer.h"
 #include "driver/vga.h"
 
 void os::IO::PutLine(const char *c) {
-	os::Terminal *term = os::driver::VGA::Instance();
+	os::Writer *w = os::driver::VGAWriter::Instance();
 	for (size i = 0; c[i] != '\0'; i++) {
-		term->Put(c[i]);
+		w->WriteByte(c[i]);
 	}
+	w->WriteByte('\n');
 }
