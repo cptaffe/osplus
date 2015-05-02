@@ -1,6 +1,8 @@
 
-#ifndef OS_TYPES_H_
-#define OS_TYPES_H_
+#ifndef BOS_TYPES_H_
+#define BOS_TYPES_H_
+
+namespace basilisk {
 
 // integer sizes
 typedef unsigned char u8;
@@ -18,4 +20,6 @@ typedef unsigned int uint;
 // size_t sizes
 typedef __SIZE_TYPE__ size;
 
-#endif // OS_TYPES_H_
+} // namespace basilisk
+
+#endif // BOS_TYPES_H_

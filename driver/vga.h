@@ -5,10 +5,10 @@
 #include "../types.h"
 #include "../writer.h"
 
-namespace os {
+namespace basilisk {
 namespace driver {
 
-class VGAWriter : public os::Writer {
+class VGAWriter : public basilisk::Writer {
 public:
 	VGAWriter();
 	static VGAWriter *Instance() { return &vga; }
@@ -29,6 +29,6 @@ private:
 };
 
 } // namespace driver
-} // namespace os
+} // namespace basilisk
 
 #endif // OS_DRIVER_VGA_H_

@@ -2,7 +2,8 @@
 #include "standard.h"
 #include "io.h"
 
-extern "C" void *memcpy(void *dest, const void *src, size n) {
+extern "C" void *memcpy(void *dest, const void *src, basilisk::size n) {
+	using namespace basilisk;
 
 	// copy using size type copying
 	size n_size = n % sizeof(size);

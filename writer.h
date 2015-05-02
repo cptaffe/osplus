@@ -4,7 +4,7 @@
 
 #include "types.h"
 
-namespace os {
+namespace basilisk {
 class Writer {
 public:
 	virtual ~Writer() {};
@@ -13,6 +13,6 @@ public:
 	// convenience methods.
 	void Write(const char *msg, size len);
 };
-} // namespace os
+} // namespace basilisk
 
 #endif // OS_TERMINAL_H_

@@ -2,16 +2,16 @@
 #include "../standard.h"
 #include "vga.h"
 
-os::driver::VGAWriter os::driver::VGAWriter::vga;
+basilisk::driver::VGAWriter basilisk::driver::VGAWriter::vga;
 
-os::driver::VGAWriter::VGAWriter() {
+basilisk::driver::VGAWriter::VGAWriter() {
 	// clear screen.
 	for (size li = 0; li < (kHeight * kWidth); li++) {
 		buf[li] = (color << 8) | ' ';
 	}
 }
 
-void os::driver::VGAWriter::Newline() {
+void basilisk::driver::VGAWriter::Newline() {
 	if (i != kHeight) {
 		i = (i + 1) % kHeight;
 	} else {
@@ -19,7 +19,7 @@ void os::driver::VGAWriter::Newline() {
 	}
 }
 
-void os::driver::VGAWriter::WriteByte(u8 c) {
+void basilisk::driver::VGAWriter::WriteByte(u8 c) {
 	switch (c) {
 	case '\n':
 		Newline();
