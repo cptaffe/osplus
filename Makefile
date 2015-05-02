@@ -4,15 +4,18 @@ CXX = i686-elf-g++
 CXXFLAGS = --std=c++11 -ffreestanding -fno-builtin -nostdlib -nostdinc -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 LNKFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc
 
-SRC = boot.cc entry.cc kernel.cc driver/vga.cc standard.cc io.cc
-OBJ = $(SRC:.cc=.o)
+SRC = boot.s entry.cc kernel.cc driver/vga.cc standard.cc io.cc
+OBJ_S = $(SRC:.cc=.o)
+OBJ = $(OBJ_S:.s=.o)
 BIN = kernel
 
 CRTBEGIN:=$(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND:=$(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
 %.o: %.cc
-	# recompile every file every time
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+%.o: %.s
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # NOTE: these must be linked in this order
