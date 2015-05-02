@@ -13,8 +13,7 @@ typedef unsigned long long int u64;
 typedef long long int i64;
 
 // generic types
-typedef unsigned int u;
-typedef int i;
+typedef unsigned int uint;
 
 // size_t sizes
 typedef __SIZE_TYPE__ size;
