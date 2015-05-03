@@ -27,11 +27,6 @@ asm(
 ".global _start\n"
 ".type _start, @function\n"
 "_start:\n"
-"movl $stack_top, %esp\n" // set stack.
-"call _init\n" // global constructors
-"call GlobalEntryPoint\n" // call global entry point
-"call _fini\n" // global destructors
-"cli\n"
-"hlt\n"
-".Lhang: jmp .Lhang\n" // infinite loop
+"	movl $stack_top, %esp\n" // set stack.
+"	call GlobalEntryPoint\n" // call global entry point
 );
