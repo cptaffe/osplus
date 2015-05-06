@@ -2,29 +2,38 @@
 #include "io.h"
 #include "runnable.h"
 #include "kernel.h"
+#include "types.h"
 
 extern "C" void _init();
 extern "C" void _fini();
 
-class test : public basilisk::Runnable {
+class StartUp : public basilisk::Runnable {
 	void Run() {
 		using namespace basilisk;
+		// indicate successful boot.
 		IO::PutLine(
-			"Basilisk OS v0.0.1 (c) 2015 Connor Taffe. All rights reserved.\n\n"
+			"OS has successfully booted...\n"
+			"Basilisk OS v0.0.1 (c) 2015 Connor Taffe. All rights reserved.\n"
 		);
 	}
 };
 
-extern "C" void GlobalEntryPoint() {
+void start() {
 	using namespace basilisk;
+	// test interrupts
+	StartUp start;
+	Kernel::Instance()->Do(&start);
+}
+
+extern "C" void GlobalEntryPoint() {
 	_init();
-	IO::PutLine(
-		"OS has successfully booted...\n"
-	);
-	test t;
-	asm("sti\n");
-	Kernel::Instance()->Do(&t);
+	start();
 	_fini();
-	asm("cli\nhlt\n");
-	for (;;) {} // hang forever.
+
+	// hang forever.
+	asm(
+		"cli\n"
+		"hlt\n"
+	);
+	for (;;) {}
 }
