@@ -8,13 +8,44 @@
 namespace basilisk {
 namespace driver {
 
-class VGAWriter : public basilisk::Writeable {
+class VGAScreen : public basilisk::Writeable {
 public:
-	VGAWriter();
-	static VGAWriter& Instance() { return vga; }
-	virtual bool Write(Buffer& buf);
+	static VGAScreen& Instance() { return vga; }
+	virtual bool Write(const Buffer& buf);
+
+	// color enumeration
+	enum {
+		kBlack = 0,
+		kBlue,
+		kGreen,
+		kCyan,
+		kRed,
+		kMagenta,
+		kBrown,
+		kLightGrey,
+		kDarkGrey,
+		kLightBlue,
+		kLightGreen,
+		kLightCyan,
+		kLightRed,
+		kLightMagenta,
+		kLightBrown,
+		kWhite
+	};
+
+	// Color augmentation functions (whole screen)
+	u8 Background();
+	u8 Foreground();
+	void SetBackground(u8 color);
+	void SetForeground(u8 color);
+
+	// clear text to ' '
+	void Clear();
+	// clear color to current color setting.
+	void Paint();
 private:
-	static VGAWriter vga;
+	VGAScreen();
+	static VGAScreen vga;
 	void Put(u8 c);
 	void Newline();
 

@@ -8,5 +8,6 @@
 #include "types.h"
 
 extern "C" void *memcpy(void *dest, const void *src, basilisk::size n);
+extern "C" void *memmove(void *dest, const void *src, basilisk::size n);
 
 #endif // BOS_STANDARD_H_

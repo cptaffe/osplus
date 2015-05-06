@@ -26,11 +26,11 @@ public:
 
 	// implicit constructor targets strings.
 	Buffer(const char *buf);
-	virtual Iterator &Iter();
+	virtual Iterator &Iter() const;
 private:
 	const u8 *obj;
 	size len;
-	Iterator iter;
+	mutable Iterator iter;
 };
 
 } // namespace basilisk

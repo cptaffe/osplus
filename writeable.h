@@ -12,7 +12,7 @@ namespace basilisk {
 class Writeable {
 public:
 	virtual ~Writeable() {}
-	virtual bool Write(Buffer& buf);
+	virtual bool Write(const Buffer& buf);
 };
 
 class Readable {

@@ -26,6 +26,6 @@ Buffer::Buffer(const char *buf) : Buffer(buf,
 		return i;
 	}()) {}
 
-Buffer::Iterator &Buffer::Iter() { return iter; }
+Buffer::Iterator &Buffer::Iter() const { return iter; }
 
 } // namespace basilisk

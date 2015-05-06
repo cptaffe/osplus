@@ -20,7 +20,7 @@ template <typename Type>
 class Iterable {
 public:
 	virtual ~Iterable() {}
-	virtual Iterator<Type> &Iter() = 0;
+	virtual Iterator<Type> &Iter() const = 0;
 };
 
 } // namespace basilisk

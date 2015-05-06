@@ -35,7 +35,12 @@ public:
 	};
 	u32 Get() const;
 	void Set(u32);
+
+	// Interrupt specific convenience functions
+	bool Interrupts() const;
+ 	void SetInterrupts(bool active);
 private:
+	Flags();
 	static Flags flags;
 };
 
@@ -43,17 +48,13 @@ private:
 // manages the computer's resources.
 class Kernel {
 public:
-	Kernel();
 	static Kernel& Instance();
 
 	// call Run on a Runnable object.
 	void Do(Runnable& r, bool interruptable = true);
-
 private:
+	Kernel();
 	static Kernel kernel;
-
-	// getter and setter for interrupts
-	bool Interrupts(bool active);
 };
 
 } // namespace basilisk

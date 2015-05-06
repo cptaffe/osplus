@@ -6,6 +6,10 @@ namespace basilisk {
 
 Flags Flags::flags;
 
+Flags::Flags() {
+	// nothing yet...
+}
+
 Flags& Flags::Instance() { return flags; }
 
 u32 Flags::Get() const {
@@ -27,6 +31,19 @@ void Flags::Set(u32 f) {
 	);
 }
 
+// interrupt specific convenience function.
+bool Flags::Interrupts() const {
+	return Flags::Instance().Get() & Flags::kInterrupt;
+}
+
+void Flags::SetInterrupts(bool active) {
+	if (active) {
+		Flags::Instance().Set(Flags::Instance().Get() | Flags::kInterrupt);
+	} else {
+		Flags::Instance().Set(Flags::Instance().Get() & !Flags::kInterrupt);
+	}
+}
+
 Kernel Kernel::kernel;
 
 Kernel::Kernel() {
@@ -35,20 +52,11 @@ Kernel::Kernel() {
 
 Kernel& Kernel::Instance() { return kernel; }
 
-bool Kernel::Interrupts(bool active) {
-	bool old = Flags::Instance().Get() & Flags::kInterrupt;
-	if (active) {
-		Flags::Instance().Set(Flags::Instance().Get() | Flags::kInterrupt);
-	} else {
-		Flags::Instance().Set(Flags::Instance().Get() & !Flags::kInterrupt);
-	}
-	return old;
-}
-
 void Kernel::Do(Runnable& r, bool interruptable) {
-	bool old = Interrupts(interruptable);
+	bool old = Flags::Instance().Interrupts();
+	Flags::Instance().SetInterrupts(interruptable);
 	r.Run(); // running job with interrupts setting
-	Interrupts(old);
+	Flags::Instance().SetInterrupts(old);
 }
 
 } // namespace basilisk

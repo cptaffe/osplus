@@ -22,6 +22,12 @@ extern "C" void *memcpy(void *dest, const void *src, basilisk::size n) {
 	return dest;
 }
 
+extern "C" void *memmove(void *dest, const void *src, basilisk::size n) {
+	basilisk::u8 buffer[n];
+	memcpy(buffer, src, n);
+	return memcpy(dest, buffer, n);
+}
+
 void operator delete(void *ptr) {
 	// TODO: implement memory management.
 }

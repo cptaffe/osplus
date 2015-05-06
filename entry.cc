@@ -3,6 +3,7 @@
 #include "runnable.h"
 #include "kernel.h"
 #include "types.h"
+#include "bsod.h"
 
 extern "C" void _init();
 extern "C" void _fini();
@@ -17,6 +18,7 @@ public:
 		IO::Instance()
 		.Put("OS has successfully booted...\n")
 		.Put("Basilisk OS v0.0.1 (c) 2015 Connor Taffe. All rights reserved.\n");
+		BlueScreenOfDeath::Instance().Invoke();
 	}
 private:
 	static StartUp start;
