@@ -2,11 +2,19 @@
 #ifndef BOS_FMT_H_
 #define BOS_FMT_H_
 
+#include "buffer.h"
+
 namespace basilisk {
 
+// Singleton Input/Output class.
 class IO {
 public:
-	static void PutLine(const char *msg);
+	static IO &Instance() { return io; };
+
+	// print many types of data
+	IO& Put(Buffer buffer);
+private:
+	static IO io;
 };
 
 } // namespace basilisk

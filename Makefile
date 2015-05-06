@@ -4,7 +4,7 @@ CXX = i686-elf-g++
 CXXFLAGS = --std=c++11 -ffreestanding -fno-builtin -nostdlib -nostdinc -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 LNKFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc
 
-SRC = boot.s entry.cc kernel.cc driver/vga.cc standard.cc io.cc
+SRC = boot.s entry.cc buffer.cc kernel.cc driver/vga.cc standard.cc io.cc
 OBJ_S = $(SRC:.cc=.o)
 OBJ = $(OBJ_S:.s=.o)
 BIN = kernel

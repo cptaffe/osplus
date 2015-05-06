@@ -2,18 +2,13 @@
 #include "kernel.h"
 #include "io.h"
 
-basilisk::Kernel basilisk::Kernel::kernel;
+namespace basilisk {
 
-basilisk::Kernel::Kernel() {
-	// do nothing
-}
+Flags Flags::flags;
 
-basilisk::Kernel *basilisk::Kernel::Instance() {
-	return &kernel;
-}
+Flags& Flags::Instance() { return flags; }
 
-basilisk::u32 basilisk::Kernel::flag() {
-	using namespace basilisk;
+u32 Flags::Get() const {
 	u32 flags = 0;
 	asm (
 		// push eflags onto stack, return in eax register.
@@ -24,7 +19,7 @@ basilisk::u32 basilisk::Kernel::flag() {
 	return flags;
 }
 
-void basilisk::Kernel::set_flag(basilisk::u32 f) {
+void Flags::Set(u32 f) {
 	asm (
 		"push %0\n"
 		"popfl\n"
@@ -32,29 +27,28 @@ void basilisk::Kernel::set_flag(basilisk::u32 f) {
 	);
 }
 
-bool basilisk::Kernel::interrupt() {
-	// returns if kInterrupt is set.
-	return flag() & kInterrupt;
+Kernel Kernel::kernel;
+
+Kernel::Kernel() {
+	// do nothing
 }
 
-void basilisk::Kernel::set_interrupt(bool active) {
-	using namespace basilisk;
+Kernel& Kernel::Instance() { return kernel; }
+
+bool Kernel::Interrupts(bool active) {
+	bool old = Flags::Instance().Get() & Flags::kInterrupt;
 	if (active) {
-		set_flag(flag() | kInterrupt);
+		Flags::Instance().Set(Flags::Instance().Get() | Flags::kInterrupt);
 	} else {
-		set_flag(flag() & !kInterrupt);
+		Flags::Instance().Set(Flags::Instance().Get() & !Flags::kInterrupt);
 	}
+	return old;
 }
 
-void basilisk::Kernel::Do(Runnable *r, bool interruptable) {
-	using namespace basilisk;
-	bool level = interrupt();
-	if (level) {
-		IO::PutLine("interrupts are on");
-	} else {
-		IO::PutLine("interrupts are off");
-	}
-	set_interrupt(interruptable);
-	r->Run(); // running job without interrupts;
-	set_interrupt(level);
+void Kernel::Do(Runnable& r, bool interruptable) {
+	bool old = Interrupts(interruptable);
+	r.Run(); // running job with interrupts setting
+	Interrupts(old);
 }
+
+} // namespace basilisk

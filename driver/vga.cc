@@ -2,16 +2,18 @@
 #include "../standard.h"
 #include "vga.h"
 
-basilisk::driver::VGAWriter basilisk::driver::VGAWriter::vga;
+namespace basilisk {
 
-basilisk::driver::VGAWriter::VGAWriter() {
+driver::VGAWriter driver::VGAWriter::vga;
+
+driver::VGAWriter::VGAWriter() {
 	// clear screen.
 	for (size li = 0; li < (kHeight * kWidth); li++) {
 		buf[li] = (color << 8) | ' ';
 	}
 }
 
-void basilisk::driver::VGAWriter::Newline() {
+void driver::VGAWriter::Newline() {
 	if (i != kHeight) {
 		i = (i + 1) % kHeight;
 	} else {
@@ -19,7 +21,7 @@ void basilisk::driver::VGAWriter::Newline() {
 	}
 }
 
-void basilisk::driver::VGAWriter::WriteByte(u8 c) {
+void driver::VGAWriter::Put(u8 c) {
 	switch (c) {
 	case '\n':
 		Newline();
@@ -36,3 +38,12 @@ void basilisk::driver::VGAWriter::WriteByte(u8 c) {
 		}
 	}
 }
+
+bool driver::VGAWriter::Write(Buffer& buf) {
+	for (auto i = buf.Iter(); !i.Done(); i.Next()) {
+		Put(i.Get());
+	}
+	return true; // success
+}
+
+} // namespace basilisk

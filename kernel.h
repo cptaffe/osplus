@@ -7,18 +7,12 @@
 
 namespace basilisk {
 
-class Kernel {
+// Singleton Flags class,
+// manages the CPU's flags register.
+class Flags {
 public:
-	Kernel();
-	static Kernel *Instance();
-
-	// call Run on a Runnable object.
-	void Do(Runnable *r, bool interruptable = true);
-
-private:
-	static Kernel kernel;
-
-	enum Flag {
+	static Flags& Instance();
+	enum {
 		// flags
 		kCarry = 1 << 0,
 		kParity = 1 << 2,
@@ -39,13 +33,27 @@ private:
 		kVirtualInterruptPending = 1 << 20,
 		kCPUIDAvaliable = 1 << 21,
 	};
+	u32 Get() const;
+	void Set(u32);
+private:
+	static Flags flags;
+};
 
-	u32 flag();
-	void set_flag(u32 f);
+// Singleton Kernel class,
+// manages the computer's resources.
+class Kernel {
+public:
+	Kernel();
+	static Kernel& Instance();
+
+	// call Run on a Runnable object.
+	void Do(Runnable& r, bool interruptable = true);
+
+private:
+	static Kernel kernel;
 
 	// getter and setter for interrupts
-	bool interrupt();
-	void set_interrupt(bool active);
+	bool Interrupts(bool active);
 };
 
 } // namespace basilisk

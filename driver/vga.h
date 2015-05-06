@@ -3,19 +3,19 @@
 #define OS_DRIVER_VGA_H_
 
 #include "../types.h"
-#include "../writer.h"
+#include "../writeable.h"
 
 namespace basilisk {
 namespace driver {
 
-class VGAWriter : public basilisk::Writer {
+class VGAWriter : public basilisk::Writeable {
 public:
 	VGAWriter();
-	static VGAWriter *Instance() { return &vga; }
-	virtual void WriteByte(u8 c);
+	static VGAWriter& Instance() { return vga; }
+	virtual bool Write(Buffer& buf);
 private:
 	static VGAWriter vga;
-
+	void Put(u8 c);
 	void Newline();
 
 	enum {
