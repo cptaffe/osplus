@@ -1,5 +1,7 @@
 
 #include "kernel.h"
+#include "driver/vga.h"
+#include "bsod.h"
 #include "io.h"
 
 namespace basilisk {
@@ -10,7 +12,7 @@ Flags::Flags() {
 	// nothing yet...
 }
 
-Flags& Flags::Instance() { return flags; }
+Flags& Flags::GetInstance() { return flags; }
 
 u32 Flags::Get() const {
 	u32 flags = 0;
@@ -32,31 +34,60 @@ void Flags::Set(u32 f) {
 }
 
 // interrupt specific convenience function.
-bool Flags::Interrupts() const {
-	return Flags::Instance().Get() & Flags::kInterrupt;
+bool Flags::GetInterrupts() const {
+	return Flags::GetInstance().Get() & Flags::kInterrupt;
 }
 
 void Flags::SetInterrupts(bool active) {
 	if (active) {
-		Flags::Instance().Set(Flags::Instance().Get() | Flags::kInterrupt);
+		Flags::GetInstance().Set(Flags::GetInstance().Get() | Flags::kInterrupt);
 	} else {
-		Flags::Instance().Set(Flags::Instance().Get() & !Flags::kInterrupt);
+		Flags::GetInstance().Set(Flags::GetInstance().Get() & !Flags::kInterrupt);
 	}
 }
 
 Kernel Kernel::kernel;
 
-Kernel::Kernel() {
+// NOTE: although Kernel seems dependent on VGAScreen's
+// Instance method, the constructor needn't have run
+// as
+Kernel::Kernel() : screen(driver::VGAScreen::GetInstance()) {
 	// do nothing
 }
 
-Kernel& Kernel::Instance() { return kernel; }
+Kernel& Kernel::GetInstance() { return kernel; }
 
-void Kernel::Do(Runnable& r, bool interruptable) {
-	bool old = Flags::Instance().Interrupts();
-	Flags::Instance().SetInterrupts(interruptable);
+void Kernel::Do(Runnable& r, Permissions& p) {
+	p.Invoke();
 	r.Run(); // running job with interrupts setting
-	Flags::Instance().SetInterrupts(old);
+	p.Revoke();
+}
+
+Screen &Kernel::GetScreen() const {
+	return screen;
+}
+
+void __attribute__((noreturn)) Kernel::Panic(const char *str) {
+	BlueScreenOfDeath::Instance().Invoke(GetScreen(), str);
+	Hang();
+}
+
+void Kernel::Halt() {
+	asm("hlt\n"); // execute hlt instruction.
+}
+
+void __attribute__((noreturn)) Kernel::Hang() {
+	Flags::GetInstance().SetInterrupts(false); // turn off interrupts
+	Halt(); // halt the system.
+	for (;;) {}
+}
+
+void Kernel::MessageUser(const char *msg) {
+	Screen& screen = GetScreen();
+	const Screen::Color& color = screen.GetColor();
+	screen.SetColor(Screen::Color(Screen::Color::kWhite, Screen::Color::kRed));
+	screen.Write(msg);
+	screen.SetColor(color);
 }
 
 } // namespace basilisk

@@ -4,6 +4,7 @@
 
 #include "types.h"
 #include "runnable.h"
+#include "screen.h"
 
 namespace basilisk {
 
@@ -11,7 +12,7 @@ namespace basilisk {
 // manages the CPU's flags register.
 class Flags {
 public:
-	static Flags& Instance();
+	static Flags& GetInstance();
 	enum {
 		// flags
 		kCarry = 1 << 0,
@@ -37,24 +38,52 @@ public:
 	void Set(u32);
 
 	// Interrupt specific convenience functions
-	bool Interrupts() const;
+	bool GetInterrupts() const;
  	void SetInterrupts(bool active);
 private:
 	Flags();
 	static Flags flags;
 };
 
+class Permissions {
+public:
+	explicit Permissions(bool ints) : interrupts(ints) {}
+	void Invoke() {
+		old_interrupts = Flags::GetInstance().GetInterrupts();
+		Flags::GetInstance().SetInterrupts(interrupts);
+	}
+	void Revoke() {
+		Flags::GetInstance().SetInterrupts(old_interrupts);
+	}
+private:
+	bool interrupts;
+	bool old_interrupts;
+};
+
 // Singleton Kernel class,
 // manages the computer's resources.
 class Kernel {
 public:
-	static Kernel& Instance();
+	static Kernel& GetInstance();
 
 	// call Run on a Runnable object.
-	void Do(Runnable& r, bool interruptable = true);
+	void Do(Runnable& r, Permissions &p);
+
+	// screen getter
+	Screen &GetScreen() const;
+
+	void Halt(); // halt the system.
+	void __attribute__((noreturn)) Hang(); // hang forever.
+
+	// Kernel message to user.
+	void MessageUser(const char *msg);
 private:
 	Kernel();
 	static Kernel kernel;
+
+	void __attribute__((noreturn)) Panic(const char *str);
+
+	Screen &screen;
 };
 
 } // namespace basilisk

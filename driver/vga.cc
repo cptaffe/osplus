@@ -6,11 +6,10 @@ namespace basilisk {
 
 driver::VGAScreen driver::VGAScreen::vga;
 
-driver::VGAScreen::VGAScreen() {
+driver::VGAScreen::VGAScreen() : color(7, 0) {
 	// clear text and reset color
-	for (size li = 0; li < (kHeight * kWidth); li++) {
-		buf[li] = (color << 8) | ' ';
-	}
+	Paint();
+	Clear();
 }
 
 void driver::VGAScreen::Newline() {
@@ -19,7 +18,7 @@ void driver::VGAScreen::Newline() {
 	} else {
 		memcpy(buf, &buf[kWidth], kWidth * (kHeight - 1) * sizeof(u16));
 		for (uint li = 0; li < kWidth; li++) {
-			buf[kWidth * (kHeight - 1) + li] = (color << 8) | ' ';
+			buf[kWidth * (kHeight - 1) + li] = (color.color << 8) | ' ';
 		}
 	}
 }
@@ -33,7 +32,7 @@ void driver::VGAScreen::Put(u8 c) {
 		j = 0;
 		break;
 	default:
-		buf[(i * kWidth) + j] = (color << 8) | c;
+		buf[(i * kWidth) + j] = (color.color << 8) | c;
 		j = (j + 1) % kWidth;
 		if (j == 0) {
 			// at end of line.
@@ -60,24 +59,16 @@ void driver::VGAScreen::Paint() {
 	// repaint screen with selected color
 	for (size li = 0; li < (kHeight * kWidth); li++) {
 		// bitmask to remove color.
-		buf[li] = (color << 8) | (0x00ff & buf[li]);
+		buf[li] = (color.color << 8) | (0x00ff & buf[li]);
 	}
 }
 
-u8 driver::VGAScreen::Background() {
-	return (0xf0 & buf[0]) >> 4;
+const Screen::Color &driver::VGAScreen::GetColor() const {
+	return color;
 }
 
-u8 driver::VGAScreen::Foreground() {
-	return (0x0f & color);
-}
-
-void driver::VGAScreen::SetBackground(u8 c) {
-	color = (color & 0x0f) | (c << 4);
-}
-
-void driver::VGAScreen::SetForeground(u8 c) {
-	color = (color & 0xf0) | c;
+void driver::VGAScreen::SetColor(const Screen::Color &col) {
+	color = col;
 }
 
 } // namespace basilisk

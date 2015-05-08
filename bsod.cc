@@ -1,13 +1,11 @@
 
 #include "bsod.h"
-#include "driver/vga.h"
-#include "io.h"
 
 namespace basilisk {
 
 // Here follows a message mirroring that of the
 // Windows XP BSOD screen.
-Buffer message = "\nA problem has been detected and BasiliskOS has been shut down to prevent damage to your computer.\n\n"
+const char *BlueScreenOfDeath::message = "\nA problem has been detected and BasiliskOS has been shut down to prevent damage to your computer.\n\n"
 "The problem seems to be caused by the following file FUCKOFF.SYS\n\n"
 "STOP_BEING_A_TOTAL_BITCH\n\n"
 "If this is the first time you've seen this Stop error screen,\n"
@@ -32,13 +30,11 @@ BlueScreenOfDeath& BlueScreenOfDeath::Instance() {
 	return bsod_;
 }
 
-void BlueScreenOfDeath::Invoke() {
-	driver::VGAScreen& screen = driver::VGAScreen::Instance();
-	screen.SetBackground(driver::VGAScreen::kBlue);
-	screen.SetForeground(driver::VGAScreen::kWhite);
+void BlueScreenOfDeath::Invoke(Screen &screen, const char *str) {
+	screen.SetColor(Screen::Color(Screen::Color::kWhite, Screen::Color::kBlue));
 	screen.Clear();
 	screen.Paint();
-	IO::Instance().Put(message);
+	screen.Write(str);
 }
 
 } // namespace basilisk

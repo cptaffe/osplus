@@ -1,7 +1,7 @@
 /*
 	Bootloader starts execution at the GlobalEntryPoint function.
 */
-ENTRY(GlobalEntryPoint)
+ENTRY(_start)
 
 /* Tell where the various sections of the object files will be put in the final
    kernel image. */

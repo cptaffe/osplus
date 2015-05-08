@@ -8,7 +8,7 @@ namespace basilisk {
 IO IO::io;
 
 IO& IO::Put(Buffer buf) {
-	driver::VGAScreen::Instance().Write(buf);
+	driver::VGAScreen::GetInstance().Write(buf);
 	return *this;
 }
 

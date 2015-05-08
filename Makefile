@@ -1,17 +1,20 @@
 
 # cross compiler
+#CXX = clang -target i686-pc-none-elf
 CXX = i686-elf-g++
-CXXFLAGS = --std=c++11 -ffreestanding -fno-builtin -nostdlib -nostdinc -O2 -Wall -Wextra -fno-exceptions -fno-rtti
-LNKFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc
+FLAGS = -nostdlib -O2 -Wall -Wextra
+CXXFLAGS = --std=c++11 $(FLAGS) -ffreestanding -fno-builtin -nostdinc -fno-exceptions -fno-rtti
+LNKFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib #-lgcc
 
-SRC = driver/vga.cc \
+SRC = main.cc \
+	driver/vga.cc \
 	io.cc \
 	bsod.cc \
 	boot.s \
-	entry.cc \
 	buffer.cc \
 	kernel.cc \
-	standard.cc
+	standard.cc \
+	interrupts.cc
 OBJ_S = $(SRC:.cc=.o)
 OBJ = $(OBJ_S:.s=.o)
 BIN = kernel

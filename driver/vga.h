@@ -4,45 +4,21 @@
 
 #include "../types.h"
 #include "../writeable.h"
+#include "../screen.h"
 
 namespace basilisk {
 namespace driver {
 
-class VGAScreen : public basilisk::Writeable {
+class VGAScreen : public basilisk::Screen {
 public:
-	static VGAScreen& Instance() { return vga; }
+	static VGAScreen& GetInstance() { return vga; }
 	virtual bool Write(const Buffer& buf);
 
-	// color enumeration
-	enum {
-		kBlack = 0,
-		kBlue,
-		kGreen,
-		kCyan,
-		kRed,
-		kMagenta,
-		kBrown,
-		kLightGrey,
-		kDarkGrey,
-		kLightBlue,
-		kLightGreen,
-		kLightCyan,
-		kLightRed,
-		kLightMagenta,
-		kLightBrown,
-		kWhite
-	};
-
 	// Color augmentation functions (whole screen)
-	u8 Background();
-	u8 Foreground();
-	void SetBackground(u8 color);
-	void SetForeground(u8 color);
-
-	// clear text to ' '
-	void Clear();
-	// clear color to current color setting.
-	void Paint();
+	virtual const basilisk::Screen::Color &GetColor() const;
+	virtual void SetColor(const basilisk::Screen::Color& c);
+	virtual void Paint();
+	virtual void Clear();
 private:
 	VGAScreen();
 	static VGAScreen vga;
@@ -54,7 +30,7 @@ private:
 		kHeight = 25
 	};
 
-	u16 color = 7;
+	basilisk::Screen::Color color;
 	int i = 0, j = 0;
 	u16 *buf = (u16 *) 0xb8000;
 };

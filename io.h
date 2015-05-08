@@ -9,7 +9,7 @@ namespace basilisk {
 // Singleton Input/Output class.
 class IO {
 public:
-	static IO &Instance() { return io; };
+	static IO &GetInstance() { return io; };
 
 	// print many types of data
 	IO& Put(Buffer buffer);
