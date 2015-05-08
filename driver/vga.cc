@@ -63,7 +63,7 @@ void driver::VGAScreen::Paint() {
 	}
 }
 
-const Screen::Color &driver::VGAScreen::GetColor() const {
+Screen::Color driver::VGAScreen::GetColor() const {
 	return color;
 }
 

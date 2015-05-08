@@ -15,7 +15,7 @@ public:
 	virtual bool Write(const Buffer& buf);
 
 	// Color augmentation functions (whole screen)
-	virtual const basilisk::Screen::Color &GetColor() const;
+	virtual basilisk::Screen::Color GetColor() const;
 	virtual void SetColor(const basilisk::Screen::Color& c);
 	virtual void Paint();
 	virtual void Clear();

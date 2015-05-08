@@ -37,7 +37,7 @@ public:
 		u8 color;
 	};
 
-	virtual const Color &GetColor() const = 0;
+	virtual Color GetColor() const = 0;
 	virtual void SetColor(const Color &c) = 0;
 	virtual void Paint() = 0;
 	virtual void Clear() = 0;

@@ -12,9 +12,9 @@ extern "C" void _init();
 extern "C" void _fini();
 
 // StartUp Singleton.
-class StartUp : public basilisk::Runnable {
+class StartUpTask : public basilisk::Runnable {
 public:
-	static StartUp& GetInstance() { return start; }
+	static StartUpTask& GetInstance() { return start; }
 	void Run() {
 		using namespace basilisk;
 		// indicate successful boot.
@@ -22,28 +22,20 @@ public:
 			"OS has successfully booted...\n"
 			"Basilisk OS v0.0.1 (c) 2015 Connor Taffe. All rights reserved.\n"
 		);
+		asm("int $0x80\n"); // test interrupt
 	}
 private:
-	static StartUp start;
+	static StartUpTask start;
 };
 
-StartUp StartUp::start;
+StartUpTask StartUpTask::start;
 
 extern "C" __attribute__((noreturn)) void main() {
 	using namespace basilisk;
-	// Inerrupts are off by default.
-	_init();
+	Kernel::Start(); // kernel startup.
 
-	// Do work after constructors have been run.
 	Permissions p(true);
-	Kernel::GetInstance().Do(StartUp::GetInstance(), p);
+	Kernel::GetInstance().Do(StartUpTask::GetInstance(), p);
 
-	// Use kernel's printing abilities
-	Kernel::GetInstance().MessageUser("System halting!\n");
-
-	// run destructors & call hang on Kernel object.
-	// NOTE: this is a reason the kernel object may not be allocated
-	// in non-static memory.
-	_fini();
-	Kernel::GetInstance().Hang();
+	Kernel::Stop(); // stop execution.
 }

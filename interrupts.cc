@@ -96,15 +96,27 @@ Interrupts::Pointer::Pointer(u16 size, void *table) :
 	base((u32) table) {}
 
 namespace {
-void handle() {
+
+extern "C" void handle() {
 	IO::GetInstance().Put("Handler!\n");
-	asm("cli\nhlt\n");
 }
+
+// shitty interrupt handler
+asm(
+	".global handler\n"
+	"handler:\n"
+	"call handle\n"
+	"iret\n"
+);
+
+extern "C" void handler();
+
 } // namespace
 
 Interrupts::Interrupts() : ptr(sizeof(entries), &entries) {
 	// TODO: int 0x80 will crash the system.
-	SetHandler(0x80, (void *) &handle);
+	SetHandler(0x80, (void *) &handler);
+	Apply(); // initial application.
 }
 
 void *Interrupts::GetHandler(int n) {
@@ -112,8 +124,8 @@ void *Interrupts::GetHandler(int n) {
 }
 
 void Interrupts::SetHandler(int n, void *handler) {
-	// set handler function
-	entries[n] = Entry(handler, 0x08, 0x8E);
+	// set handler function for interrupt.
+	entries[n] = Entry(handler, 0x08, Entry::kPresent | Entry::kInterruptGate);
 }
 
 // Load Interrupt Descriptor Table

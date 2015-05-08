@@ -89,6 +89,25 @@ public:
 		constexpr Entry();
 		Entry(void *handler, u16 sel, u8 flags);
 
+		enum {
+			kPresent = 1 << 7,
+
+			// Ring priviledges (0 is default)
+			kPrivRing0 = (0 & 3) << 5,
+			kPrivRing1 = (1 & 3) << 5,
+			kPrivRing2 = (2 & 3) << 5,
+			kPrivRing3 = (3 & 3) << 5,
+
+			kStorageSegment = 1 << 4,
+
+			// gate types
+			kTaskGate = 5,
+			kShortInterruptGate = 6,
+			kShortTrapGate = 7,
+			kInterruptGate = 0xe,
+			kTrapGate = 0xf,
+		};
+
 		void *GetHandler();
 		void SetHandler(void *handler);
 	private:

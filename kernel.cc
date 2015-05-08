@@ -57,6 +57,20 @@ Kernel::Kernel() : screen(driver::VGAScreen::GetInstance()) {
 
 Kernel& Kernel::GetInstance() { return kernel; }
 
+extern "C" void _init();
+extern "C" void _fini();
+
+void Kernel::Start() {
+	_init();
+	GetInstance().MessageUser("System is up!\n");
+}
+
+void __attribute__((noreturn)) Kernel::Stop() {
+	GetInstance().MessageUser("System is halting!\n");
+	_fini();
+	GetInstance().Hang();
+}
+
 void Kernel::Do(Runnable& r, Permissions& p) {
 	p.Invoke();
 	r.Run(); // running job with interrupts setting
@@ -84,7 +98,7 @@ void __attribute__((noreturn)) Kernel::Hang() {
 
 void Kernel::MessageUser(const char *msg) {
 	Screen& screen = GetScreen();
-	const Screen::Color& color = screen.GetColor();
+	Screen::Color color = screen.GetColor();
 	screen.SetColor(Screen::Color(Screen::Color::kWhite, Screen::Color::kRed));
 	screen.Write(msg);
 	screen.SetColor(color);

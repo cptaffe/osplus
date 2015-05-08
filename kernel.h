@@ -66,14 +66,18 @@ class Kernel {
 public:
 	static Kernel& GetInstance();
 
+	// do startup and stop tasks.
+	static void Start();
+	static void __attribute__((noreturn)) Stop();
+
 	// call Run on a Runnable object.
 	void Do(Runnable& r, Permissions &p);
 
 	// screen getter
 	Screen &GetScreen() const;
 
-	void Halt(); // halt the system.
-	void __attribute__((noreturn)) Hang(); // hang forever.
+	// hang forever.
+	void __attribute__((noreturn)) Hang();
 
 	// Kernel message to user.
 	void MessageUser(const char *msg);
@@ -82,6 +86,7 @@ private:
 	static Kernel kernel;
 
 	void __attribute__((noreturn)) Panic(const char *str);
+	void Halt(); // halt the system.
 
 	Screen &screen;
 };
