@@ -29,6 +29,6 @@ _start:
 	movl $stack_top, %esp // set stack.
 	call main // call global entry point
 
-// GlobalEntryPoint will run global constructors, call a function,
+// main will run global constructors, call a function,
 // call global destructors, and hang. Thusly, this point will never
 // be reached.
