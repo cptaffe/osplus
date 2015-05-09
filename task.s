@@ -3,11 +3,12 @@
 // The name mangling is from g++. This is poor practice as
 // it will not be the same on other compilers.
 
-// void basilisk::Scheduler::Task::Switch(Task *task)
-.globl	_ZN8basilisk9Scheduler4Task6SwitchEPS1_
+.text
+// void basilisk::Task::Switch(Task *task)
+.globl	_ZN8basilisk4Task6SwitchEPS0_
 .align	16, 0x90
-.type	_ZN8basilisk9Scheduler4Task6SwitchEPS1_,@function
-_ZN8basilisk9Scheduler4Task6SwitchEPS1_:
+.type	_ZN8basilisk4Task6SwitchEPS0_,@function
+_ZN8basilisk4Task6SwitchEPS0_:
 	pushl	%ebp
 	movl	%esp, %ebp
 
@@ -49,11 +50,11 @@ _ZN8basilisk9Scheduler4Task6SwitchEPS1_:
 	popl	%ebp
 	ret
 
-// void basilisk::Scheduler::Task::Initialize(void *call)
-.globl	_ZN8basilisk9Scheduler4Task10InitializeEPv
+// void basilisk::Task::Initialize(void *call)
+.globl	_ZN8basilisk4Task10InitializeEPv
 .align	16, 0x90
-.type	_ZN8basilisk9Scheduler4Task10InitializeEPv,@function
-_ZN8basilisk9Scheduler4Task10InitializeEPv:
+.type	_ZN8basilisk4Task10InitializeEPv,@function
+_ZN8basilisk4Task10InitializeEPv:
 	pushl	%ebp
 	movl	%esp, %ebp
 
@@ -75,7 +76,7 @@ _ZN8basilisk9Scheduler4Task10InitializeEPv:
 	movl	(%eax), %esp
 
 	// push what the thread should return to, Sleep.
-	pushl	$_ZN8basilisk9Scheduler5SleepEv
+	pushl	$_ZN8basilisk4Task9Scheduler5SleepEv
 	pushl	%ecx // push func
 	pushl	4(%esp) // push stack, after sleep push.
 

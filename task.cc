@@ -3,29 +3,27 @@
 
 namespace basilisk {
 
-Scheduler Scheduler::sched_;
+Task::Scheduler Task::Scheduler::sched_;
 
 namespace {
 
 // the current task (implicitly spawned on startup).
-Scheduler::Task task(0);
+Task task(0);
 
 } // namespace
 
 // creation of a new task for running.
-Scheduler::Task::Task(int id, void *func) :
-	task_id(id) {
-	// set stackp
-	stackp = (u32) stack;
+Task::Task(void *func) :
+	stackp((u32) stack) {
 	Initialize(func);
 }
 
-Scheduler::Scheduler() {
+Task::Scheduler::Scheduler() {
 	// set up current task.
 	current = &task;
 }
 
-bool Scheduler::Put(Task *task) {
+bool Task::Scheduler::Put(Task *task) {
 	// insert if possible.
 	for (uint i = 0; i < (sizeof(tasks) / sizeof(Task *)); i++) {
 		if (tasks[i] == nullptr) {
@@ -36,7 +34,7 @@ bool Scheduler::Put(Task *task) {
 	return false;
 }
 
-Scheduler::Task *Scheduler::Get() {
+Task *Task::Scheduler::Get() {
 	// insert if possible.
 	for (uint i = 0; i < (sizeof(tasks) / sizeof(Task *)); i++) {
 		if (tasks[i] != nullptr) {
@@ -49,7 +47,7 @@ Scheduler::Task *Scheduler::Get() {
 }
 
 // switches to another task.
-void Scheduler::Yield() {
+void Task::Scheduler::Yield() {
 	Task *running = current;
 	Task *next = Get();
 	if (next != nullptr) {
@@ -60,7 +58,7 @@ void Scheduler::Yield() {
 }
 
 // switches to another task.
-void Scheduler::Sleep() {
+void Task::Scheduler::Sleep() {
 	Task *running = current;
 	Task *next = Get();
 	if (next != nullptr) {

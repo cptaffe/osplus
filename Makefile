@@ -16,18 +16,19 @@ SRC = main.cc \
 	standard.cc \
 	interrupts.cc \
 	task.cc \
-	proc.s
-OBJ_S = $(SRC:.cc=.o)
-OBJ = $(OBJ_S:.s=.o)
+	task.s \
+	startup.cc
+OBJ_S = $(SRC:.cc=.cc.o)
+OBJ = $(OBJ_S:.s=.s.o)
 BIN = kernel
 
 CRTBEGIN:=$(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND:=$(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
-%.o: %.cc
+%.cc.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-%.o: %.s
+%.s.o: %.s
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # NOTE: these must be linked in this order
