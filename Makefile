@@ -14,7 +14,9 @@ SRC = main.cc \
 	buffer.cc \
 	kernel.cc \
 	standard.cc \
-	interrupts.cc
+	interrupts.cc \
+	task.cc \
+	proc.s
 OBJ_S = $(SRC:.cc=.o)
 OBJ = $(OBJ_S:.s=.o)
 BIN = kernel

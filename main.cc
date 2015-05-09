@@ -4,12 +4,19 @@
 #include "kernel.h"
 #include "types.h"
 #include "bsod.h"
+#include "task.h"
 
 // This file is called 'main' because it contains the entry
 // point of the OS, which I have named 'main'.
 
 extern "C" void _init();
 extern "C" void _fini();
+
+namespace {
+void test() {
+	asm("cli\nhlt\n");
+}
+} // namespace
 
 // StartUp Singleton.
 class StartUpTask : public basilisk::Runnable {
@@ -22,7 +29,12 @@ public:
 			"OS has successfully booted...\n"
 			"Basilisk OS v0.0.1 (c) 2015 Connor Taffe. All rights reserved.\n"
 		);
-		asm("int $0x80\n"); // test interrupt
+
+		Scheduler::Task task(1, (void *) &test);
+		Scheduler::GetInstance().Put(&task);
+
+		// should switch to above task.
+		// Scheduler::GetInstance().Yield();
 	}
 private:
 	static StartUpTask start;
