@@ -20,13 +20,7 @@ public:
 		virtual Task &GetTask() = 0;
 	};
 
-	virtual void Run() {
-		// Running a Task adds the task to the scheduler
-		// and runs the scheduler, running all scheduled
-		// tasks (theoretically).
-		Scheduler::GetInstance().Put(this);
-		Scheduler::GetInstance().Yield();
-	}
+	virtual void Run();
 private:
 	void Switch(Task *task);
 	void Initialize(void *call);

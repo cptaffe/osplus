@@ -14,7 +14,9 @@ SRC = main.cc \
 	buffer.cc \
 	kernel.cc \
 	standard.cc \
+	systemcall.cc \
 	interrupts.cc \
+	interrupts.s \
 	task.cc \
 	task.s \
 	startup.cc

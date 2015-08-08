@@ -41,6 +41,7 @@ _ZN8basilisk4Task6SwitchEPS0_:
 
 	movl	%esp, (%eax)
 	movl	(%ecx), %esp
+	leal	12(%esp), %ebp
 
 	movl	-4(%ebp), %ebx
 	movl	-8(%ebp), %esi
@@ -72,16 +73,15 @@ _ZN8basilisk4Task10InitializeEPv:
 	// 2. push esp (pointer to stack).
 	// 3. push callee saved registers.
 
-	movl	%esp, %edx
-	movl	(%eax), %esp
+	movl	%esp, %edx   // save current esp
+	movl	(%eax), %esp // move stackp to esp
+	movl	%esp, %ebp
 
 	// push what the thread should return to, Sleep.
-	pushl	$_ZN8basilisk4Task9Scheduler5SleepEv
 	pushl	%ecx // push func
-	pushl	4(%esp) // push stack, after sleep push.
-
+	pushl	%ebp // push stack, after sleep push.
+	movl	%esp, %ebp
 	subl	$12, %esp
-
 	movl	$0, -4(%ebp)
 	movl	$0, -8(%ebp)
 	movl	$0, -12(%ebp)

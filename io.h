@@ -3,6 +3,7 @@
 #define BOS_FMT_H_
 
 #include "buffer.h"
+#include "types.h"
 
 namespace basilisk {
 
@@ -13,6 +14,7 @@ public:
 
 	// print many types of data
 	IO& Put(Buffer buffer);
+	IO& Put(u32 number, int base = 10);
 private:
 	static IO io;
 };

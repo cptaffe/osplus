@@ -1,5 +1,6 @@
 
 #include "task.h"
+#include "io.h"
 
 namespace basilisk {
 
@@ -14,13 +15,23 @@ Task task(0);
 
 // creation of a new task for running.
 Task::Task(void *func) :
-	stackp((u32) stack) {
+	stackp((u32) stack[(sizeof(stack) / sizeof(u32)) - 1]) {
 	Initialize(func);
 }
 
 Task::Scheduler::Scheduler() {
 	// set up current task.
 	current = &task;
+}
+
+void Task::Run() {
+	// Running a Task adds the task to the scheduler
+	// and runs the scheduler, running all scheduled
+	// tasks (theoretically).
+	IO::GetInstance().Put("Running Run\n");
+	Scheduler::GetInstance().Put(this);
+	Scheduler::GetInstance().Yield();
+	IO::GetInstance().Put("Returned from Yield\n");
 }
 
 bool Task::Scheduler::Put(Task *task) {

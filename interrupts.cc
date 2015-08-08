@@ -1,5 +1,6 @@
 
 #include "interrupts.h"
+#include "systemcall.h"
 #include "io.h"
 
 namespace basilisk {
@@ -97,17 +98,10 @@ Interrupts::Pointer::Pointer(u16 size, void *table) :
 
 namespace {
 
-extern "C" void handle() {
-	IO::GetInstance().Put("Handler!\n");
+extern "C" void SystemCallHandler(u32 *args) {
+	// Defer control to the SystemCall class.
+	SystemCall::GetInstance().Invoke(args);
 }
-
-// shitty interrupt handler
-asm(
-	".global handler\n"
-	"handler:\n"
-	"call handle\n"
-	"iret\n"
-);
 
 extern "C" void handler();
 
